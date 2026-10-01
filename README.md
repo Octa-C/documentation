@@ -1,4 +1,4 @@
-# octac-docs
+# OctaC - Documentation
 
 LaTeX source for a technical book documenting the design of OctaC, a statically typed, C-structured language for numerical and matrix computation, built as part of a Compiler Construction course.
 
