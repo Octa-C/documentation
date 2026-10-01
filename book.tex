@@ -57,10 +57,23 @@
     morestring=[b]"
 }
 
-% Token name in a table cell: monospace, allowed to break after underscores.
+\usepackage{xstring}
+
+% A bare state or token name in monospace, allowed to break after
+% underscores: \stok{START}, \stok{STAR_SLASH_MOD}.
+%
+% A token in <class, value> or <class,> form, built from the class name and
+% an optional value: \tok{START} -> <START,>, \tok{SCALAR, i32} ->
+% <SCALAR, i32>. The class name is broken at underscores as in \stok.
 \makeatletter
 \def\tok@split#1_#2\@nil{#1\if\relax\detokenize{#2}\relax\else\_\allowbreak\tok@split#2\@nil\fi}
-\newcommand{\tok}[1]{\texttt{\tok@split#1_\@nil}}
+\newcommand{\stok}[1]{\texttt{\tok@split#1_\@nil}}
+\def\tok@pair#1, #2\tok@stop{\texttt{<\stok{#1},}\,\texttt{#2>}}%
+\newcommand{\tok}[1]{%
+  \IfSubStr{#1}{,}%
+    {\tok@pair#1\tok@stop}%
+    {\texttt{<\stok{#1},>}}%
+}
 \makeatother
 
 % Plain style for pseudocode listings (no keyword highlighting).

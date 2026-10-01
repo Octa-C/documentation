@@ -10,21 +10,21 @@ defines the full token specification of OctaC, the deterministic finite
 automata that recognize those tokens
 \cite{aho2006compilers,hopcroft2006automata}, and the algorithm the lexer
 uses to drive them. The source code of the lexer is available at:
-\url{https://github.com/Octa-C/lexer}
+\url{https://github.com/Octa-C/compiler/tree/main/lexer}
 
 \section{Token Specification}
 
 This section lists the complete token set for the lexical analyzer, in
-Table~\ref{tab:token-set}. Every token belongs to a category, and some are
-divided further into a subcategory. The loop keywords \code{for}, \code{do},
-\code{until}, and \code{continue}, for example, belong to the Keyword category
-and the Loops subcategory. The Token column gives the token as it is written
-in the source, or a descriptive name where one token covers several lexemes.
-The Values column is filled only for those tokens that match more than one
-lexeme, or a pattern, such as the scalar datatypes or the integer literals,
-and lists the lexemes or the regular expression they match. The last column
-gives the generated name of the token, built from its category, subcategory,
-and token in the form \code{CATEGORY\_SUBCATEGORY\_TOKEN}, which is the name
+Table~\ref{tab:token-set}. Every token belongs to a category, and some
+belong to a subcategory within it: the loop keywords \code{for}, \code{do},
+\code{until}, and \code{continue}, for example, belong to the Keyword
+category and the Loops subcategory. The Token column gives the token as it
+is written in the source, or a descriptive name where one token covers
+several lexemes. The Values column is filled only for those tokens that
+match more than one lexeme, or a pattern, such as the scalar datatypes or
+the integer literals, and lists the lexemes or the regular expression they
+match. The last column gives the generated name of the token, a short
+capitalized name such as \code{FOR} or \code{ASSIGNMENT}, which is the name
 used to identify the token from here on.
 
 The logical and equality operators are written as English words, so they are
@@ -41,62 +41,62 @@ lexer itself.
 \toprule
 \textbf{Category} & \textbf{Subcategory} & \textbf{Token} & \textbf{Values} & \textbf{Generated token} \\
 \midrule
-Keyword & Loops & \texttt{for} &  & \tok{KW_LOOPS_FOR} \\
-Keyword & Loops & \texttt{do} &  & \tok{KW_LOOPS_DO} \\
-Keyword & Loops & \texttt{until} &  & \tok{KW_LOOPS_UNTIL} \\
-Keyword & Loops & \texttt{continue} &  & \tok{KW_LOOPS_CONTINUE} \\
-Keyword & Function & \texttt{function} &  & \tok{KW_FUNC_FUNCTION} \\
-Keyword & Function & \texttt{return} &  & \tok{KW_FUNC_RETURN} \\
-Keyword & Conditional & \texttt{if} &  & \tok{KW_CONDITIONAL_IF} \\
-Keyword & Conditional & \texttt{else} &  & \tok{KW_CONDITIONAL_ELSE} \\
-Keyword & Conditional & \texttt{elseif} &  & \tok{KW_CONDITIONAL_ELSEIF} \\
-Keyword & Conditional & \texttt{caseof} &  & \tok{KW_CONDITIONAL_CASEOF} \\
-Keyword & Conditional & \texttt{case} &  & \tok{KW_CONDITIONAL_CASE} \\
-Keyword & Conditional & \texttt{default} &  & \tok{KW_CONDITIONAL_DEFAULT} \\
-Keyword & Word-based Logic/Rel Ops & \texttt{and} &  & \tok{KW_WORDBASED_LOGICREL_OPS_AND} \\
-Keyword & Word-based Logic/Rel Ops & \texttt{or} &  & \tok{KW_WORDBASED_LOGICREL_OPS_OR} \\
-Keyword & Word-based Logic/Rel Ops & \texttt{not} &  & \tok{KW_WORDBASED_LOGICREL_OPS_NOT} \\
-Keyword & Word-based Logic/Rel Ops & \texttt{is} &  & \tok{KW_WORDBASED_LOGICREL_OPS_IS} \\
-Keyword & Word-based Logic/Rel Ops & \texttt{in} &  & \tok{KW_WORDBASED_LOGICREL_OPS_IN} \\
-Keyword & Misc & \texttt{break} &  & \tok{KW_MISC_BREAK} \\
+Keyword & Loops & \texttt{for} &  & \stok{FOR} \\
+Keyword & Loops & \texttt{do} &  & \stok{DO} \\
+Keyword & Loops & \texttt{until} &  & \stok{UNTIL} \\
+Keyword & Loops & \texttt{continue} &  & \stok{CONTINUE} \\
+Keyword & Function & \texttt{function} &  & \stok{FUNCTION} \\
+Keyword & Function & \texttt{return} &  & \stok{RETURN} \\
+Keyword & Conditional & \texttt{if} &  & \stok{IF} \\
+Keyword & Conditional & \texttt{else} &  & \stok{ELSE} \\
+Keyword & Conditional & \texttt{elseif} &  & \stok{ELSEIF} \\
+Keyword & Conditional & \texttt{caseof} &  & \stok{CASEOF} \\
+Keyword & Conditional & \texttt{case} &  & \stok{CASE} \\
+Keyword & Conditional & \texttt{default} &  & \stok{DEFAULT} \\
+Keyword & Word-based Logic/Rel Ops & \texttt{and} &  & \stok{AND} \\
+Keyword & Word-based Logic/Rel Ops & \texttt{or} &  & \stok{OR} \\
+Keyword & Word-based Logic/Rel Ops & \texttt{not} &  & \stok{NOT} \\
+Keyword & Word-based Logic/Rel Ops & \texttt{is} &  & \stok{IS} \\
+Keyword & Word-based Logic/Rel Ops & \texttt{in} &  & \stok{IN} \\
+Keyword & Misc & \texttt{break} &  & \stok{BREAK} \\
 \midrule
-Datatype &  & Scalar & \texttt{i64}, \texttt{i32}, \texttt{i16}, \texttt{f64}, \texttt{f32}, \texttt{f16}, \texttt{bool} & \tok{DT_SCALAR} \\
-Datatype &  & \texttt{vector} &  & \tok{DT_VECTOR} \\
-Datatype &  & \texttt{matrix} &  & \tok{DT_MATRIX} \\
-Datatype &  & \texttt{string} &  & \tok{DT_STRING} \\
+Datatype &  & Scalar & \texttt{i64}, \texttt{i32}, \texttt{i16}, \texttt{f64}, \texttt{f32}, \texttt{f16}, \texttt{bool} & \stok{SCALAR} \\
+Datatype &  & \texttt{vector} &  & \stok{VECTOR} \\
+Datatype &  & \texttt{matrix} &  & \stok{MATRIX} \\
+Datatype &  & \texttt{string} &  & \stok{STRING} \\
 \midrule
-Punctuation &  & \texttt{\{} &  & \tok{PUNCTUATION_LBRACE} \\
-Punctuation &  & \texttt{\}} &  & \tok{PUNCTUATION_RBRACE} \\
-Punctuation &  & \texttt{(} &  & \tok{PUNCTUATION_LPAREN} \\
-Punctuation &  & \texttt{)} &  & \tok{PUNCTUATION_RPAREN} \\
-Punctuation &  & \texttt{[} &  & \tok{PUNCTUATION_LBRACKET} \\
-Punctuation &  & \texttt{]} &  & \tok{PUNCTUATION_RBRACKET} \\
-Punctuation &  & \texttt{;} &  & \tok{PUNCTUATION_SEMICOLON} \\
-Punctuation &  & \texttt{->} &  & \tok{PUNCTUATION_ARROW} \\
-Punctuation &  & \texttt{,} &  & \tok{PUNCTUATION_COMMA} \\
-Punctuation &  & \texttt{...} &  & \tok{PUNCTUATION_ELLIPSIS} \\
-Punctuation &  & \texttt{:} &  & \tok{PUNCTUATION_COLON} \\
+Punctuation &  & \texttt{\{} &  & \stok{LBRACE} \\
+Punctuation &  & \texttt{\}} &  & \stok{RBRACE} \\
+Punctuation &  & \texttt{(} &  & \stok{LPAREN} \\
+Punctuation &  & \texttt{)} &  & \stok{RPAREN} \\
+Punctuation &  & \texttt{[} &  & \stok{LBRACKET} \\
+Punctuation &  & \texttt{]} &  & \stok{RBRACKET} \\
+Punctuation &  & \texttt{;} &  & \stok{SEMICOLON} \\
+Punctuation &  & \texttt{->} &  & \stok{ARROW} \\
+Punctuation &  & \texttt{,} &  & \stok{COMMA} \\
+Punctuation &  & \texttt{...} &  & \stok{ELLIPSIS} \\
+Punctuation &  & \texttt{:} &  & \stok{COLON} \\
 \midrule
-Operators & Standard & \texttt{+-} & \texttt{+}, \texttt{-} & \tok{OPERATORS_STANDARD_PLUSMINUS} \\
-Operators & Standard & \texttt{* / \%} & \texttt{*}, \texttt{/}, \texttt{\%} & \tok{OPERATORS_STANDARD_STAR_SLASH_MOD} \\
-Operators & Matrix & \texttt{'} &  & \tok{OPERATORS_MATRIX_TRANSPOSE} \\
-Operators & Matrix & \texttt{.*} &  & \tok{OPERATORS_MATRIX_DOT_STAR} \\
-Operators & Matrix & \texttt{./} &  & \tok{OPERATORS_MATRIX_DOT_SLASH} \\
-Operators & Relational and Comparison Ops & \texttt{<} &  & \tok{OPERATORS_RELATIONAL_AND_COMPARISON_OPS_LESS} \\
-Operators & Relational and Comparison Ops & \texttt{>} &  & \tok{OPERATORS_RELATIONAL_AND_COMPARISON_OPS_GREATER} \\
-Operators & Relational and Comparison Ops & \texttt{<=} &  & \tok{OPERATORS_RELATIONAL_AND_COMPARISON_OPS_LESS_EQ} \\
-Operators & Relational and Comparison Ops & \texttt{>=} &  & \tok{OPERATORS_RELATIONAL_AND_COMPARISON_OPS_GREATER_EQ} \\
-Operators & Assignment &  & \texttt{=}, \texttt{+=}, \texttt{-=}, \texttt{*=}, \texttt{/=} & \tok{OPERATORS_ASSIGNMENT} \\
+Operators & Standard & \texttt{+-} & \texttt{+}, \texttt{-} & \stok{PLUSMINUS} \\
+Operators & Standard & \texttt{* / \%} & \texttt{*}, \texttt{/}, \texttt{\%} & \stok{STAR_SLASH_MOD} \\
+Operators & Matrix & \texttt{'} &  & \stok{TRANSPOSE} \\
+Operators & Matrix & \texttt{.*} &  & \stok{DOT_STAR} \\
+Operators & Matrix & \texttt{./} &  & \stok{DOT_SLASH} \\
+Operators & Relational and Comparison Ops & \texttt{<} &  & \stok{LESS} \\
+Operators & Relational and Comparison Ops & \texttt{>} &  & \stok{GREATER} \\
+Operators & Relational and Comparison Ops & \texttt{<=} &  & \stok{LESS_EQ} \\
+Operators & Relational and Comparison Ops & \texttt{>=} &  & \stok{GREATER_EQ} \\
+Operators & Assignment &  & \texttt{=}, \texttt{+=}, \texttt{-=}, \texttt{*=}, \texttt{/=} & \stok{ASSIGNMENT} \\
 \midrule
-Identifier &  & identifier & \texttt{[a-zA-Z][a-zA-Z0-9\_]*} & \tok{IDENTIFIER} \\
+Identifier &  & identifier & \texttt{[a-zA-Z][a-zA-Z0-9\_]*} & \stok{IDENTIFIER} \\
 \midrule
-Constants &  & bool constant & \texttt{1}, \texttt{0} & \tok{CONSTANTS_BOOL_CONSTANT} \\
-Constants &  & int literal & \texttt{[0-9]+} & \tok{CONSTANTS_INT_LITERAL} \\
-Constants &  & float literal & \begin{tabular}[t]{@{}l@{}}\texttt{[0-9]+\textbackslash .[0-9]+}\\ \texttt{[0-9]+(\textbackslash .[0-9]+)?[eE][+-]?[0-9]+}\end{tabular} & \tok{CONSTANTS_FLOAT_LITERAL} \\
-Constants &  & string literal & \texttt{"[\textasciicircum "\textbackslash n]*"} & \tok{CONSTANTS_STRING_LITERAL} \\
+Constants &  & bool constant & \texttt{1}, \texttt{0} & \stok{BOOL} \\
+Constants &  & int literal & \texttt{[0-9]+} & \stok{INT} \\
+Constants &  & float literal & \begin{tabular}[t]{@{}l@{}}\texttt{[0-9]+\textbackslash .[0-9]+}\\ \texttt{[0-9]+(\textbackslash .[0-9]+)?[eE][+-]?[0-9]+}\end{tabular} & \stok{FLOAT} \\
+Constants &  & string literal & \texttt{"[\textasciicircum "\textbackslash n]*"} & \stok{STRING_LIT} \\
 \midrule
-Compiler &  & EOF &  & \tok{COMPILER_EOF} \\
-Compiler &  & Error &  & \tok{COMPILER_ERROR} \\
+Compiler &  & EOF &  & \stok{COMPILER_EOF} \\
+Compiler &  & Error &  & \stok{COMPILER_ERROR} \\
 \bottomrule
 \end{tabular}
 \caption{The OctaC token set.}
@@ -192,13 +192,15 @@ lexeme.
 
 \subsection{Identifiers, Keywords, and Type Names}
 
-An identifier has the pattern \code{[a-zA-Z][a-zA-Z0-9\_]*}: a letter followed
-by any number of letters, digits and underscores. The DFA has one accepting
-state, \code{IDENT}, and it emits \textless IDENTIFIER, value\textgreater.
-Keywords and type names have the same shape, so the DFA reads them as
-identifiers as well. After the DFA accepts, the lexer looks the lexeme up in
-Table~\ref{tab:lookup}. A lexeme that is in the table gets the keyword or type
-token given there in place of \textless IDENTIFIER, value\textgreater.
+\begin{sloppypar}
+An identifier has the pattern \code{[a-zA-Z][a-zA-Z0-9\_]*}: a letter
+followed by any number of letters, digits and underscores. The DFA has one
+accepting state, \code{IDENT}, which emits \tok{IDENTIFIER, value}. Keywords
+and type names have the same shape, so the DFA reads them as identifiers
+as well. After the DFA accepts, the lexer looks the lexeme up in
+Table~\ref{tab:lookup}. A lexeme that is in the table gets the keyword or
+type token given there in place of \tok{IDENTIFIER, value}.
+\end{sloppypar}
 
 An underscore cannot start an identifier, so it has no transition out of
 the start state and is reported as a lexical error.
@@ -210,7 +212,7 @@ the start state and is reported as a lexical error.
 \node[draw,circle,fill=white,inner sep=1pt,minimum size=0.42in] (START) at (0.9,0.7) {START};
 \node[draw,circle,fill=white,inner sep=1pt,minimum size=0.42in,double,double distance=1.3pt] (IDENT) at (3.0,0.7) {IDENT};
 \draw[-{Triangle[length=4bp,width=3bp]}] (0.4,0.7) -- (START);
-\node[inner sep=0pt,align=left,anchor=west] (IDENT-out) at (3.6,0.7) {\textless{}IDENTIFIER, value\textgreater{}};
+\node[inner sep=0pt,align=left,anchor=west] (IDENT-out) at (3.6,0.7) {\tok{IDENTIFIER, value}};
 \draw[-{Triangle[length=4bp,width=3bp]}] (START) to[bend left=0] node[pos=0.5,above,inner sep=1pt,align=center] {\code{a-z} \code{A-Z}} (IDENT);
 \path[-{Triangle[length=4bp,width=3bp]}] (IDENT) edge[loop above,min distance=7mm] node[above,inner sep=1pt,align=center] {\code{a-z} \code{A-Z} \code{0-9} \code{\_}} (IDENT);
 \draw[-{Triangle[length=4bp,width=3bp]}] (IDENT) to[bend left=0] (IDENT-out.west);
@@ -224,28 +226,28 @@ the start state and is reported as a lexical error.
 \centering
 \footnotesize
 \begin{tabular}{@{}ll@{}}
-\code{for} & \textless{}KW\_LOOPS\_FOR,\textgreater{} \\
-\code{do} & \textless{}KW\_LOOPS\_DO,\textgreater{} \\
-\code{until} & \textless{}KW\_LOOPS\_UNTIL,\textgreater{} \\
-\code{continue} & \textless{}KW\_LOOPS\_CONTINUE,\textgreater{} \\
-\code{function} & \textless{}KW\_FUNC\_FUNCTION,\textgreater{} \\
-\code{return} & \textless{}KW\_FUNC\_RETURN,\textgreater{} \\
-\code{if} & \textless{}KW\_CONDITIONAL\_IF,\textgreater{} \\
-\code{else} & \textless{}KW\_CONDITIONAL\_ELSE,\textgreater{} \\
-\code{elseif} & \textless{}KW\_CONDITIONAL\_ELSEIF,\textgreater{} \\
-\code{caseof} & \textless{}KW\_CONDITIONAL\_CASEOF,\textgreater{} \\
-\code{case} & \textless{}KW\_CONDITIONAL\_CASE,\textgreater{} \\
-\code{default} & \textless{}KW\_CONDITIONAL\_DEFAULT,\textgreater{} \\
-\code{and} & \textless{}KW\_WORDBASED\_LOGICREL\_OPS\_AND,\textgreater{} \\
-\code{or} & \textless{}KW\_WORDBASED\_LOGICREL\_OPS\_OR,\textgreater{} \\
-\code{not} & \textless{}KW\_WORDBASED\_LOGICREL\_OPS\_NOT,\textgreater{} \\
-\code{is} & \textless{}KW\_WORDBASED\_LOGICREL\_OPS\_IS,\textgreater{} \\
-\code{in} & \textless{}KW\_WORDBASED\_LOGICREL\_OPS\_IN,\textgreater{} \\
-\code{break} & \textless{}KW\_MISC\_BREAK,\textgreater{} \\
-\code{i64} \code{i32} \code{i16} \code{f64} \code{f32} \code{f16} \code{bool} & \textless{}DT\_SCALAR, value\textgreater{} \\
-\code{vector} & \textless{}DT\_VECTOR,\textgreater{} \\
-\code{matrix} & \textless{}DT\_MATRIX,\textgreater{} \\
-\code{string} & \textless{}DT\_STRING,\textgreater{} \\
+\code{for} & \tok{FOR} \\
+\code{do} & \tok{DO} \\
+\code{until} & \tok{UNTIL} \\
+\code{continue} & \tok{CONTINUE} \\
+\code{function} & \tok{FUNCTION} \\
+\code{return} & \tok{RETURN} \\
+\code{if} & \tok{IF} \\
+\code{else} & \tok{ELSE} \\
+\code{elseif} & \tok{ELSEIF} \\
+\code{caseof} & \tok{CASEOF} \\
+\code{case} & \tok{CASE} \\
+\code{default} & \tok{DEFAULT} \\
+\code{and} & \tok{AND} \\
+\code{or} & \tok{OR} \\
+\code{not} & \tok{NOT} \\
+\code{is} & \tok{IS} \\
+\code{in} & \tok{IN} \\
+\code{break} & \tok{BREAK} \\
+\code{i64} \code{i32} \code{i16} \code{f64} \code{f32} \code{f16} \code{bool} & \tok{SCALAR, value} \\
+\code{vector} & \tok{VECTOR} \\
+\code{matrix} & \tok{MATRIX} \\
+\code{string} & \tok{STRING} \\
 \end{tabular}
 \caption{Keywords and type names, and the tokens the lookup after IDENT gives them.}
 \label{tab:lookup}
@@ -266,17 +268,17 @@ Table~\ref{tab:punct} gives the token for each lexeme.
 \centering
 \footnotesize
 \begin{tabular}{@{}ll@{}}
-\code{\symbol{123}} & \textless{}PUNCTUATION\_LBRACE,\textgreater{} \\
-\code{\symbol{125}} & \textless{}PUNCTUATION\_RBRACE,\textgreater{} \\
-\code{(} & \textless{}PUNCTUATION\_LPAREN,\textgreater{} \\
-\code{)} & \textless{}PUNCTUATION\_RPAREN,\textgreater{} \\
-\code{[} & \textless{}PUNCTUATION\_LBRACKET,\textgreater{} \\
-\code{]} & \textless{}PUNCTUATION\_RBRACKET,\textgreater{} \\
-\code{;} & \textless{}PUNCTUATION\_SEMICOLON,\textgreater{} \\
-\code{->} & \textless{}PUNCTUATION\_ARROW,\textgreater{} \\
-\code{,} & \textless{}PUNCTUATION\_COMMA,\textgreater{} \\
-\code{...} & \textless{}PUNCTUATION\_ELLIPSIS,\textgreater{} \\
-\code{:} & \textless{}PUNCTUATION\_COLON,\textgreater{} \\
+\code{\symbol{123}} & \tok{LBRACE} \\
+\code{\symbol{125}} & \tok{RBRACE} \\
+\code{(} & \tok{LPAREN} \\
+\code{)} & \tok{RPAREN} \\
+\code{[} & \tok{LBRACKET} \\
+\code{]} & \tok{RBRACKET} \\
+\code{;} & \tok{SEMICOLON} \\
+\code{->} & \tok{ARROW} \\
+\code{,} & \tok{COMMA} \\
+\code{...} & \tok{ELLIPSIS} \\
+\code{:} & \tok{COLON} \\
 \end{tabular}
 \caption{Punctuation lexemes and the tokens they give.}
 \label{tab:punct}
@@ -329,16 +331,16 @@ written with the words \code{is} and \code{is not}.
 \centering
 \footnotesize
 \begin{tabular}{@{}ll@{}}
-\code{+} \code{-} & \textless{}OPERATORS\_STANDARD\_PLUSMINUS, value\textgreater{} \\
-\code{*} \code{/} \code{\%} & \textless{}OPERATORS\_STANDARD\_STAR\_SLASH\_MOD, value\textgreater{} \\
-\code{\textquotesingle{}} & \textless{}OPERATORS\_MATRIX\_TRANSPOSE,\textgreater{} \\
-\code{.*} & \textless{}OPERATORS\_MATRIX\_DOT\_STAR,\textgreater{} \\
-\code{./} & \textless{}OPERATORS\_MATRIX\_DOT\_SLASH,\textgreater{} \\
-\code{<} & \textless{}OPERATORS\_RELATIONAL\_AND\_COMPARISON\_OPS\_LESS,\textgreater{} \\
-\code{>} & \textless{}OPERATORS\_RELATIONAL\_AND\_COMPARISON\_OPS\_GREATER,\textgreater{} \\
-\code{<=} & \textless{}OPERATORS\_RELATIONAL\_AND\_COMPARISON\_OPS\_LESS\_EQ,\textgreater{} \\
-\code{>=} & \textless{}OPERATORS\_RELATIONAL\_AND\_COMPARISON\_OPS\_GREATER\_EQ,\textgreater{} \\
-\code{=} \code{+=} \code{-=} \code{*=} \code{/=} & \textless{}OPERATORS\_ASSIGNMENT, value\textgreater{} \\
+\code{+} \code{-} & \tok{PLUSMINUS, value} \\
+\code{*} \code{/} \code{\%} & \tok{STAR_SLASH_MOD, value} \\
+\code{\textquotesingle{}} & \tok{TRANSPOSE} \\
+\code{.*} & \tok{DOT_STAR} \\
+\code{./} & \tok{DOT_SLASH} \\
+\code{<} & \tok{LESS} \\
+\code{>} & \tok{GREATER} \\
+\code{<=} & \tok{LESS_EQ} \\
+\code{>=} & \tok{GREATER_EQ} \\
+\code{=} \code{+=} \code{-=} \code{*=} \code{/=} & \tok{ASSIGNMENT, value} \\
 \end{tabular}
 \caption{Operator lexemes and the tokens they give.}
 \label{tab:ops}
@@ -425,10 +427,10 @@ quote never reaches an accepting state and is reported as an error.
 \node[draw,circle,fill=white,inner sep=1pt,minimum size=0.42in] (STR_BODY) at (1.9,0.9) {STR\_BODY};
 \node[draw,circle,fill=white,inner sep=1pt,minimum size=0.42in,double,double distance=1.3pt] (STR_END) at (4.1,0.9) {STR\_END};
 \draw[-{Triangle[length=4bp,width=3bp]}] (0.09999999999999998,3.1) -- (START);
-\node[inner sep=0pt,align=left,anchor=south] (INT-out) at (1.9,5.05) {\textless{}CONSTANTS\_INT\_LITERAL, value\textgreater{}};
-\node[inner sep=0pt,align=left,anchor=south] (FLOAT-out) at (5.0,5.05) {\textless{}CONSTANTS\_FLOAT\_LITERAL, value\textgreater{}};
-\node[inner sep=0pt,align=left,anchor=north west] (FLOAT_EXP-out) at (5.2,1.3) {\textless{}CONSTANTS\_FLOAT\_LITERAL, value\textgreater{}};
-\node[inner sep=0pt,align=left,anchor=north west] (STR_END-out) at (4.25,0.4) {\textless{}CONSTANTS\_STRING\_LITERAL, value\textgreater{}};
+\node[inner sep=0pt,align=left,anchor=south] (INT-out) at (1.9,5.05) {\tok{INT, value}};
+\node[inner sep=0pt,align=left,anchor=south] (FLOAT-out) at (5.0,5.05) {\tok{FLOAT, value}};
+\node[inner sep=0pt,align=left,anchor=north west] (FLOAT_EXP-out) at (5.2,1.3) {\tok{FLOAT, value}};
+\node[inner sep=0pt,align=left,anchor=north west] (STR_END-out) at (4.25,0.4) {\tok{STRING_LIT, value}};
 \draw[-{Triangle[length=4bp,width=3bp]}] (START) to[bend left=0] node[pos=0.5,above left,inner sep=1pt,align=center] {\code{0-9}} (INT);
 \draw[-{Triangle[length=4bp,width=3bp]}] (START) to[bend left=0] node[pos=0.5,right,inner sep=1pt,align=center] {\code{\symbol{34}}} (STR_BODY);
 \path[-{Triangle[length=4bp,width=3bp]}] (INT) edge[loop left,min distance=7mm] node[left,inner sep=1pt,align=center] {\code{0-9}} (INT);
@@ -455,12 +457,12 @@ quote never reaches an accepting state and is reported as an error.
 
 \subsection{Compiler Tokens}
 
-The end of the input emits \textless COMPILER\_EOF,\textgreater. The scanner
+The end of the input emits \tok{COMPILER_EOF}. The scanner
 checks for the end of the input before it runs the DFA, so the code has no
 state for it, and the transition goes straight from the start state to the
 token. When the next character has no transition and no accepting state was passed, the DFA is in
 \code{DEAD}, the error state of the code, and the text read so far is emitted
-as \textless COMPILER\_ERROR,\textgreater.
+as \tok{COMPILER_ERROR}.
 
 \begin{figure}[H]
 \centering
@@ -469,8 +471,8 @@ as \textless COMPILER\_ERROR,\textgreater.
 \node[draw,circle,fill=white,inner sep=1pt,minimum size=0.42in] (START) at (0.9,1.8) {START};
 \node[draw,circle,fill=white,inner sep=1pt,minimum size=0.42in] (DEAD) at (3.0,0.6) {DEAD};
 \draw[-{Triangle[length=4bp,width=3bp]}] (0.4,1.8) -- (START);
-\node[inner sep=0pt,align=left,anchor=west] (eof-out) at (3.4,1.8) {\textless{}COMPILER\_EOF,\textgreater{}};
-\node[inner sep=0pt,align=left,anchor=west] (DEAD-out) at (3.4,0.6) {\textless{}COMPILER\_ERROR,\textgreater{}};
+\node[inner sep=0pt,align=left,anchor=west] (eof-out) at (3.4,1.8) {\tok{COMPILER_EOF}};
+\node[inner sep=0pt,align=left,anchor=west] (DEAD-out) at (3.4,0.6) {\tok{COMPILER_ERROR}};
 \draw[-{Triangle[length=4bp,width=3bp]}] (START) to[bend left=0] node[pos=0.5,above,inner sep=1pt,align=center] {\code{end of input}} (eof-out.west);
 \draw[-{Triangle[length=4bp,width=3bp]}] (DEAD) to[bend left=0] (DEAD-out.west);
 \end{tikzpicture}
@@ -525,13 +527,13 @@ names the source gives them.
     end in OP\_DONE, MINUS, OP\_EQ, SLASH, DOT and DOT\_DOT.
     \item A state that is accepting for one class stays accepting in the
     merged DFA, so MINUS and SLASH are accepting here.
-    \item IDENT emits \textless IDENTIFIER, value\textgreater, which
+    \item IDENT emits \tok{IDENTIFIER, value}, which
     Table~\ref{tab:lookup} replaces when the lexeme is a keyword or type
     name. OP\_EQ and OP\_DONE emit different tokens depending on the
     lexeme. The arrow from each of them names the tables that list them.
     \item The DFA runs until the next character has no transition. The
     token of the last accepting state passed is emitted, and if none was
-    passed the consumed text is a \textless COMPILER\_ERROR,\textgreater{}
+    passed the consumed text is a \tok{COMPILER_ERROR}
     token. DEAD is not drawn: every missing transition leads to it.
 \end{enumerate}
 
@@ -558,16 +560,16 @@ names the source gives them.
 \node[draw,circle,fill=white,inner sep=1pt,minimum size=0.42in,double,double distance=1.3pt] (STR_END) at (4.6,11.700000000000001) {STR\_END};
 \node[draw,circle,fill=white,inner sep=1pt,minimum size=0.42in,double,double distance=1.3pt] (WS) at (2.5,13.0) {WS};
 \draw[-{Triangle[length=4bp,width=3bp]}] (0.09999999999999998,7.1) -- (START);
-\node[inner sep=0pt,align=left,anchor=west] (IDENT-out) at (3.15,10.4) {\textless{}IDENTIFIER, value\textgreater{}};
-\node[inner sep=0pt,align=left,anchor=north] (INT-out) at (1.6,2.3) {\textless{}CONSTANTS\_INT\_LITERAL, value\textgreater{}};
-\node[inner sep=0pt,align=left,anchor=south] (FLOAT-out) at (5.5,3.3499999999999996) {\textless{}CONSTANTS\_FLOAT\_LITERAL, value\textgreater{}};
-\node[inner sep=0pt,align=left,anchor=north] (FLOAT_EXP-out) at (5.4,0.65) {\textless{}CONSTANTS\_FLOAT\_LITERAL, value\textgreater{}};
+\node[inner sep=0pt,align=left,anchor=west] (IDENT-out) at (3.15,10.4) {\tok{IDENTIFIER, value}};
+\node[inner sep=0pt,align=left,anchor=north] (INT-out) at (1.6,2.3) {\tok{INT, value}};
+\node[inner sep=0pt,align=left,anchor=south] (FLOAT-out) at (5.5,3.3499999999999996) {\tok{FLOAT, value}};
+\node[inner sep=0pt,align=left,anchor=north] (FLOAT_EXP-out) at (5.4,0.65) {\tok{FLOAT, value}};
 \node[inner sep=0pt,align=left,anchor=west] (OP_DONE-out) at (5.35,7.1) {Tables~\ref{tab:punct} and~\ref{tab:ops}};
-\node[inner sep=0pt,align=left,anchor=north] (MINUS-out) at (2.5,5.7) {\textless{}OPERATORS\_STANDARD\_PLUSMINUS, value\textgreater{}};
+\node[inner sep=0pt,align=left,anchor=north] (MINUS-out) at (2.5,5.7) {\tok{PLUSMINUS, value}};
 \node[inner sep=0pt,align=left,anchor=south] (OP_EQ-out) at (2.5,8.35) {Table~\ref{tab:ops}};
-\node[inner sep=0pt,align=left,anchor=west] (SLASH-out) at (2.9,4.75) {\textless{}OPERATORS\_STANDARD\_STAR\_SLASH\_MOD, value\textgreater{}};
+\node[inner sep=0pt,align=left,anchor=west] (SLASH-out) at (2.9,4.75) {\tok{STAR_SLASH_MOD, value}};
 \node[inner sep=0pt,align=left,anchor=west] (COMMENT-out) at (3.1,4.1) {no token};
-\node[inner sep=0pt,align=left,anchor=north] (STR_END-out) at (4.6,11.25) {\textless{}CONSTANTS\_STRING\_LITERAL, value\textgreater{}};
+\node[inner sep=0pt,align=left,anchor=north] (STR_END-out) at (4.6,11.25) {\tok{STRING_LIT, value}};
 \node[inner sep=0pt,align=left,anchor=west] (WS-out) at (3.1,13.0) {no token};
 \draw[-{Triangle[length=4bp,width=3bp]}] (IDENT) to[bend left=0] (IDENT-out.west);
 \draw[-{Triangle[length=4bp,width=3bp]}] (INT) to[bend left=0] (INT-out.north);
@@ -685,10 +687,10 @@ function next():
 
         switch ACTION[lastAccept]:
             WORD:    type <- lookupKeyword(lexeme)
-            INT:     type <- CONSTANTS_INT_LITERAL
-            FLOAT:   type <- CONSTANTS_FLOAT_LITERAL
+            INT:     type <- INT
+            FLOAT:   type <- FLOAT
             OP:      type <- lookupOperator(lexeme)
-            STRING:  type <- CONSTANTS_STRING_LITERAL
+            STRING:  type <- STRING_LIT
             SKIP:    continue    // scan again
         return Token(type, lexeme)
 \end{lstlisting}
@@ -747,7 +749,7 @@ with the end of file token. Only some tokens have a value part: identifiers,
 scalar type names, integer, float, and string literals, the arithmetic
 operators, and the assignment operators. These are the tokens whose Values
 column is filled in Table~\ref{tab:token-set}. Every other token is written
-with an empty value part, for example \code{<PUNCTUATION\_LBRACE,>}.
+with an empty value part, for example \code{<LBRACE,>}.
 
 \subsection{Sample Runs}
 
@@ -775,11 +777,11 @@ i32 count = 10;
 \toprule
 \textbf{Lexeme} & \textbf{States visited, lookup, and token} \\
 \midrule
-\code{i32} & \tok{START} $\to$ \tok{IDENT} $\to$ \tok{IDENT} $\to$ \tok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{<DT_SCALAR, i32>} \\
-\code{count} & \tok{START} $\to$ \tok{IDENT} $\to$ \tok{IDENT} $\to$ \tok{IDENT} $\to$ \tok{IDENT} $\to$ \tok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{<IDENTIFIER, count>} \\
-\code{=} & \tok{START} $\to$ \tok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{<OPERATORS_ASSIGNMENT, =>} \\
-\code{10} & \tok{START} $\to$ \tok{INT} $\to$ \tok{INT} $\to$ \tok{<CONSTANTS_INT_LITERAL, 10>} \\
-\code{;} & \tok{START} $\to$ \tok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{<PUNCTUATION_SEMICOLON,>} \\
+\code{i32} & \stok{START} $\to$ \stok{IDENT} $\to$ \stok{IDENT} $\to$ \stok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{SCALAR, i32} \\
+\code{count} & \stok{START} $\to$ \stok{IDENT} $\to$ \stok{IDENT} $\to$ \stok{IDENT} $\to$ \stok{IDENT} $\to$ \stok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{IDENTIFIER, count} \\
+\code{=} & \stok{START} $\to$ \stok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{ASSIGNMENT, =} \\
+\code{10} & \stok{START} $\to$ \stok{INT} $\to$ \stok{INT} $\to$ \tok{INT, 10} \\
+\code{;} & \stok{START} $\to$ \stok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{SEMICOLON} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -803,15 +805,15 @@ f32 y = 2.5e-3 + a.*b;
 \toprule
 \textbf{Lexeme} & \textbf{States visited, lookup, and token} \\
 \midrule
-\code{f32} & \tok{START} $\to$ \tok{IDENT} $\to$ \tok{IDENT} $\to$ \tok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{<DT_SCALAR, f32>} \\
-\code{y} & \tok{START} $\to$ \tok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{<IDENTIFIER, y>} \\
-\code{=} & \tok{START} $\to$ \tok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{<OPERATORS_ASSIGNMENT, =>} \\
-\code{2.5e-3} & \tok{START} $\to$ \tok{INT} $\to$ \tok{INT_DOT} $\to$ \tok{FLOAT} $\to$ \tok{EXP} $\to$ \tok{EXP_SIGN} $\to$ \tok{FLOAT_EXP} $\to$ \tok{<CONSTANTS_FLOAT_LITERAL, 2.5e-3>} \\
-\code{+} & \tok{START} $\to$ \tok{OP_EQ} $\to$ lookup(operator table) $\to$ \tok{<OPERATORS_STANDARD_PLUSMINUS, +>} \\
-\code{a} & \tok{START} $\to$ \tok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{<IDENTIFIER, a>} \\
-\code{.*} & \tok{START} $\to$ \tok{DOT} $\to$ \tok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{<OPERATORS_MATRIX_DOT_STAR,>} \\
-\code{b} & \tok{START} $\to$ \tok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{<IDENTIFIER, b>} \\
-\code{;} & \tok{START} $\to$ \tok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{<PUNCTUATION_SEMICOLON,>} \\
+\code{f32} & \stok{START} $\to$ \stok{IDENT} $\to$ \stok{IDENT} $\to$ \stok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{SCALAR, f32} \\
+\code{y} & \stok{START} $\to$ \stok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{IDENTIFIER, y} \\
+\code{=} & \stok{START} $\to$ \stok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{ASSIGNMENT, =} \\
+\code{2.5e-3} & \stok{START} $\to$ \stok{INT} $\to$ \stok{INT_DOT} $\to$ \stok{FLOAT} $\to$ \stok{EXP} $\to$ \stok{EXP_SIGN} $\to$ \stok{FLOAT_EXP} $\to$ \tok{FLOAT, 2.5e-3} \\
+\code{+} & \stok{START} $\to$ \stok{OP_EQ} $\to$ lookup(operator table) $\to$ \tok{PLUSMINUS, +} \\
+\code{a} & \stok{START} $\to$ \stok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{IDENTIFIER, a} \\
+\code{.*} & \stok{START} $\to$ \stok{DOT} $\to$ \stok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{DOT_STAR} \\
+\code{b} & \stok{START} $\to$ \stok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{IDENTIFIER, b} \\
+\code{;} & \stok{START} $\to$ \stok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{SEMICOLON} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -835,16 +837,16 @@ for (i32 i = 1...5) {
 \toprule
 \textbf{Lexeme} & \textbf{States visited, lookup, and token} \\
 \midrule
-\code{for} & \tok{START} $\to$ \tok{IDENT} $\to$ \tok{IDENT} $\to$ \tok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{<KW_LOOPS_FOR,>} \\
-\code{(} & \tok{START} $\to$ \tok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{<PUNCTUATION_LPAREN,>} \\
-\code{i32} & \tok{START} $\to$ \tok{IDENT} $\to$ \tok{IDENT} $\to$ \tok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{<DT_SCALAR, i32>} \\
-\code{i} & \tok{START} $\to$ \tok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{<IDENTIFIER, i>} \\
-\code{=} & \tok{START} $\to$ \tok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{<OPERATORS_ASSIGNMENT, =>} \\
-\code{1} & \tok{START} $\to$ \tok{INT} $\to$ \tok{INT_DOT} \textit{(no move on the next dot, rewind to \tok{INT})} $\to$ \tok{<CONSTANTS_INT_LITERAL, 1>} \\
-\code{...} & \tok{START} $\to$ \tok{DOT} $\to$ \tok{DOT_DOT} $\to$ \tok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{<PUNCTUATION_ELLIPSIS,>} \\
-\code{5} & \tok{START} $\to$ \tok{INT} $\to$ \tok{<CONSTANTS_INT_LITERAL, 5>} \\
-\code{)} & \tok{START} $\to$ \tok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{<PUNCTUATION_RPAREN,>} \\
-\code{\{} & \tok{START} $\to$ \tok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{<PUNCTUATION_LBRACE,>} \\
+\code{for} & \stok{START} $\to$ \stok{IDENT} $\to$ \stok{IDENT} $\to$ \stok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{FOR} \\
+\code{(} & \stok{START} $\to$ \stok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{LPAREN} \\
+\code{i32} & \stok{START} $\to$ \stok{IDENT} $\to$ \stok{IDENT} $\to$ \stok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{SCALAR, i32} \\
+\code{i} & \stok{START} $\to$ \stok{IDENT} $\to$ lookup(keyword table) $\to$ \tok{IDENTIFIER, i} \\
+\code{=} & \stok{START} $\to$ \stok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{ASSIGNMENT, =} \\
+\code{1} & \stok{START} $\to$ \stok{INT} $\to$ \stok{INT_DOT} \textit{(no move on the next dot, rewind to \stok{INT})} $\to$ \tok{INT, 1} \\
+\code{...} & \stok{START} $\to$ \stok{DOT} $\to$ \stok{DOT_DOT} $\to$ \stok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{ELLIPSIS} \\
+\code{5} & \stok{START} $\to$ \stok{INT} $\to$ \tok{INT, 5} \\
+\code{)} & \stok{START} $\to$ \stok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{RPAREN} \\
+\code{\{} & \stok{START} $\to$ \stok{OP_DONE} $\to$ lookup(operator table) $\to$ \tok{LBRACE} \\
 \bottomrule
 \end{tabular}
 \end{center}
