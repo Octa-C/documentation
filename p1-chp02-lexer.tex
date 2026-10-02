@@ -90,7 +90,7 @@ Operators & Assignment &  & \texttt{=}, \texttt{+=}, \texttt{-=}, \texttt{*=}, \
 \midrule
 Identifier &  & identifier & \texttt{[a-zA-Z][a-zA-Z0-9\_]*} & \stok{IDENTIFIER} \\
 \midrule
-Constants &  & bool constant & \texttt{1}, \texttt{0} & \stok{BOOL} \\
+Constants &  & bool literal & \texttt{true}, \texttt{false} & \stok{BOOL_LIT} \\
 Constants &  & int literal & \texttt{[0-9]+} & \stok{INT} \\
 Constants &  & float literal & \begin{tabular}[t]{@{}l@{}}\texttt{[0-9]+\textbackslash .[0-9]+}\\ \texttt{[0-9]+(\textbackslash .[0-9]+)?[eE][+-]?[0-9]+}\end{tabular} & \stok{FLOAT} \\
 Constants &  & string literal & \texttt{"[\textasciicircum "\textbackslash n]*"} & \stok{STRING_LIT} \\
@@ -190,16 +190,18 @@ lexeme.
 \label{tab:dfa-states}
 \end{table}
 
-\subsection{Identifiers, Keywords, and Type Names}
+\subsection{Identifiers, Keywords, Type Names, and Bool Literals}
+\label{sec:ident}
 
 \begin{sloppypar}
 An identifier has the pattern \code{[a-zA-Z][a-zA-Z0-9\_]*}: a letter
 followed by any number of letters, digits and underscores. The DFA has one
-accepting state, \code{IDENT}, which emits \tok{IDENTIFIER, value}. Keywords
-and type names have the same shape, so the DFA reads them as identifiers
-as well. After the DFA accepts, the lexer looks the lexeme up in
-Table~\ref{tab:lookup}. A lexeme that is in the table gets the keyword or
-type token given there in place of \tok{IDENTIFIER, value}.
+accepting state, \code{IDENT}, which emits \tok{IDENTIFIER, value}. Keywords,
+type names, and the bool literals \code{true} and \code{false} all have the
+same shape, so the DFA reads them as identifiers as well. After the DFA
+accepts, the lexer looks up the lexeme in Table~\ref{tab:lookup}. A lexeme
+that is in the table gets the token given there in place of
+\tok{IDENTIFIER, value}.
 \end{sloppypar}
 
 An underscore cannot start an identifier, so it has no transition out of
@@ -218,7 +220,7 @@ the start state and is reported as a lexical error.
 \draw[-{Triangle[length=4bp,width=3bp]}] (IDENT) to[bend left=0] (IDENT-out.west);
 \end{tikzpicture}
 \end{adjustbox}
-\caption{DFA for identifiers, keywords, and type names.}
+\caption{DFA for identifiers, keywords, type names, and bool literals.}
 \label{fig:dfa-ident}
 \end{figure}
 
@@ -248,8 +250,9 @@ the start state and is reported as a lexical error.
 \code{vector} & \tok{VECTOR} \\
 \code{matrix} & \tok{MATRIX} \\
 \code{string} & \tok{STRING} \\
+\code{true} \code{false} & \tok{BOOL_LIT, value} \\
 \end{tabular}
-\caption{Keywords and type names, and the tokens the lookup after IDENT gives them.}
+\caption{Keywords, type names, and bool literals, and the tokens the lookup after IDENT gives them.}
 \label{tab:lookup}
 \end{table}
 
@@ -382,11 +385,11 @@ written with the words \code{is} and \code{is not}.
 
 \subsection{Constants}
 
-A constant is a bool constant, an int literal, a float literal or a string
-literal.
+A constant is an int literal, a float literal, or a string literal. The bool
+literals \code{true} and \code{false} are words, resolved through the
+keyword lookup of Section~\ref{sec:ident} rather than through this DFA.
 
 \begin{itemize}
-    \item bool constants: \code{0} \code{1}
     \item int literal: \code{[0-9]+}
     \item float literal: \code{[0-9]+\symbol{92}.[0-9]+} or
     \code{[0-9]+(\symbol{92}.[0-9]+)?[eE][+-]?[0-9]+}
@@ -399,8 +402,7 @@ Digits are read in \code{INT}. A dot followed by digits leads through
 digits to \code{FLOAT\_EXP}. A quote starts \code{STR\_BODY}, which loops on
 every character except a newline or a quote, and the closing quote reaches
 \code{STR\_END}. \code{INT}, \code{FLOAT}, \code{FLOAT\_EXP} and
-\code{STR\_END} are accepting. The lexer emits \code{0} and \code{1} as int
-literals, so the bool constant is never emitted.
+\code{STR\_END} are accepting.
 
 \code{INT\_DOT}, \code{EXP}, and \code{EXP\_SIGN} are not accepting, so a
 partial literal such as \code{1.} or \code{1e+} is not a number, and the lexer
@@ -701,24 +703,21 @@ before the position moves.
 \subsection{Resolving the Token}
 
 The action of the last accepting state says how to name the lexeme. A word is
-looked up in the keyword table, which also holds the type names, and falls back
-to an identifier. An operator or punctuator is looked up in the operator
-table. Integer literals, float literals, and string literals are named
-directly by their state. Whitespace and comments are skipped, and the loop
-starts again from the new position, so \code{next} never returns them.
-
-The token set lists a bool constant token for the values \code{0} and
-\code{1}. The lexer does not produce it. Both values are scanned as integer
-literals, and interpreting them as booleans is left to the parser.
+looked up in the keyword table, which also holds the type names and the bool
+literals, and falls back to an identifier. An operator or punctuator is looked
+up in the operator table. Integer literals, float literals, and string literals 
+are named directly by their state. Whitespace and comments are skipped, and the 
+loop starts again from the new position, so \code{next} never returns them.
 
 \subsection{Errors}
 
 If the walk never reached an accepting state, the text it consumed becomes the
 lexeme of an error token, and at least one character is consumed so that
 scanning always makes progress. The lexer then reports the lexeme on the
-standard error stream together with its line and column, and scanning
-resumes right after it. One run therefore reports every lexical error in a
-file. Table~\ref{tab:lexer-errors} shows how some invalid inputs are reported.
+standard error stream, together with its line and column, the source line
+it came from, and a marker under the lexeme, and scanning resumes right
+after it. One run therefore reports every lexical error in a file.
+Table~\ref{tab:lexer-errors} shows how some invalid inputs are reported.
 
 \begin{table}[tbp]
 \centering
@@ -746,7 +745,7 @@ file. Table~\ref{tab:lexer-errors} shows how some invalid inputs are reported.
 
 The lexer writes one token per line in the form \code{<TYPE, value>}, ending
 with the end of file token. Only some tokens have a value part: identifiers,
-scalar type names, integer, float, and string literals, the arithmetic
+scalar type names, bool, integer, float, and string literals, the arithmetic
 operators, and the assignment operators. These are the tokens whose Values
 column is filled in Table~\ref{tab:token-set}. Every other token is written
 with an empty value part, for example \code{<LBRACE,>}.
