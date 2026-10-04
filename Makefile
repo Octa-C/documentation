@@ -11,7 +11,6 @@ $(PDF): $(TEX)
 	$(LATEXMK) $(FLAGS) $(TEX)
 
 clean:
-	$(LATEXMK) -C -outdir=$(OUTDIR)
-	rm -f $(PDF)
+	rm -rf $(OUTDIR)
 
 .PHONY: all clean

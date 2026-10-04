@@ -5,9 +5,9 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{url}
-\usepackage{imakeidx}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{longtable}
 \usepackage{float}
 \usepackage{url}
 \usepackage{etoolbox}  % for showidx
@@ -76,10 +76,17 @@
 }
 \makeatother
 
-% Plain style for pseudocode listings (no keyword highlighting).
+% A nonterminal of the grammar, set in italics: \nt{Expr}.
+\newcommand{\nt}[1]{\textit{#1}}
+
+% Style for pseudocode listings: the same keyword/string highlighting as
+% real code, but for control-flow words instead of OctaC's keywords.
 \lstdefinestyle{pseudocode}{
-    keywordstyle=\relax,
-    stringstyle=\relax
+    keywords={function, switch, case, default, return, new, throw,
+              catch, try, if, else, while, for, break, continue},
+    keywordstyle=\bfseries\color{magenta},
+    stringstyle=\color{codepurple},
+    commentstyle=\color{codegreen}
 }
 
 % One space after periods
@@ -105,10 +112,6 @@
 \newcommand{\showfileref}[2]{\href{\github/#1}{\small{(\textcolor{blue}{#2})}}}
 \newcommand{\showlineref}[3]{\href{\github/#1\#L#2}{\small{(\textcolor{blue}{#3})}}}
 \newcommand{\showlinerefs}[5]{\href{\github/#1\#L#2-L#3}{\small\textcolor{blue}{(#4-#5)}}}
-
-\newcommand{\indextext}[1]{\textit{#1}\index{#1}}
-\newcommand{\indextextx}[1]{{#1}\index{#1}}
-\newcommand{\indexcode}[1]{\lstinline{#1}\index{#1@\lstinline{#1}}}
 
 %% editing markup
 \newcommand{\insertnote}[3]{\noindent\textcolor{#1}{\textbf{#2:} #3}}
@@ -145,8 +148,6 @@
 \large Designing a Hybrid Language for Numerical and Matrix Computation}
 \author{Syed Taha \and Muhammad Usman}
 
-\makeindex
-
 \begin{document}
 
 \maketitle
@@ -163,12 +164,11 @@
 \part{Language Design}
 \input{p1-chp01-introduction}
 \input{p1-chp02-lexer}
+\input{p1-chp03-parser}
 
 % Future chapters are added here as the language and compiler develop.
-% \input{chp03-grammar}
-% \input{chp04-parser}
-% \input{chp05-semantic-analysis}
-% \input{chp06-code-generation}
+% \input{chp04-semantic-analysis}
+% \input{chp05-code-generation}
 
 \input{conclusion}
 \addcontentsline{toc}{chapter}{Conclusion}
@@ -187,7 +187,5 @@
 \bibliography{bibliography}
 \addcontentsline{toc}{chapter}{Bibliography}
 }
-
-\printindex
 
 \end{document}

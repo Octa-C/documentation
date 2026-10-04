@@ -873,13 +873,13 @@ simplifications we made.
 
 \subsection{Lexer Generators}
 
-Many lexers are produced by a generator such as Lex \cite{lesk1975lex} or its
-successor Flex \cite{flex-manual}. The programmer writes a list of regular
+Many lexers are produced by a generator such as Lex \cite{aho2006compilers} or
+its successor Flex \cite{flex-manual}. The programmer writes a list of regular
 expressions, each with an action. The generator converts them into a
 deterministic finite automaton and emits a table-driven scanner
 \cite{aho2006compilers}. Two rules resolve conflicts between patterns: the
 longest match wins, and among patterns that match the same length, the one
-listed first wins \cite{lesk1975lex,flex-manual}. Our scanner follows the
+listed first wins \cite{aho2006compilers,flex-manual}. Our scanner follows the
 longest match rule. The second rule is not needed, because keywords are not
 patterns of their own.
 
