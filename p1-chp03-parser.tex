@@ -285,21 +285,21 @@ function data():
     node <- new node(Data)
     switch next.type:
         case ID:
-            node.children += shift()
+            node.children += consume()
             node.children += dataP()
         case INT:
         case FLOAT:
         case STRING_LIT:
         case BOOL_LIT:
-            node.children += shift()
+            node.children += consume()
         case LPAREN:
-            node.children += shift()
+            node.children += consume()
             node.children += expr()
-            node.children += expect(RPAREN)
+            node.children += match(RPAREN)
         case LBRACKET:
-            node.children += shift()
+            node.children += consume()
             node.children += args()
-            node.children += expect(RBRACKET)
+            node.children += match(RBRACKET)
         default:
             reportExpected("an expression")
             throw SyntaxError
@@ -315,9 +315,9 @@ time, the parser's recursion walks the grammar one symbol at a time.
 
 \subsection{Matching Terminals}
 
-A terminal is matched with \code{expect(type)}, which consumes the next
+A terminal is matched with \code{match(type)}, which consumes the next
 token if it has the required type and reports a syntax error otherwise,
-or \code{shift()}, which consumes a token already known to be there,
+or \code{consume()}, which consumes a token already known to be there,
 such as inside a \code{switch} on the next token's type. Both add the
 consumed token to the current node as a leaf.
 
